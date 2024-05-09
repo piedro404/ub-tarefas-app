@@ -3,10 +3,12 @@ import { View, Text } from "react-native";
 
 import styles from "./styles";
 
+import Logo from "@components/Logo";
+
 export default function Login(){
     return(
         <View>
-            <Text>Hello World</Text>
+            <Logo></Logo>
         </View>
     )
 }
