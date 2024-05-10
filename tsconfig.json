@@ -16,6 +16,9 @@
       "@components/*": [
         "./components/*"
       ],
-    }
+      "@scripts/*": [
+        "./scripts/*"
+      ],
+    },
   },
 }
