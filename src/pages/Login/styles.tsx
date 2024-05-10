@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     underlineContainer: {
         width: "100%",
         height: "auto",
+        marginTop: 10,
     }
 });
 

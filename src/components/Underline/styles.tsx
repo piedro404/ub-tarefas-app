@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     underline: {
         borderBottomColor: Colors.theme.primary,
         borderBottomWidth: 2,
+        borderRadius: 50,
         marginVertical: 10,
         marginHorizontal: 25,
     }
