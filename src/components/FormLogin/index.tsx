@@ -4,9 +4,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Keyboard,
-  AsyncStorage,
+  Keyboard
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome6 } from "@expo/vector-icons";
 import axios from "axios";
 
@@ -22,6 +22,18 @@ interface DialogProps {
   colorBox: string;
   colorText: string;
   alert?: string;
+}
+
+interface Profile {
+  email: string;
+  language: string;
+  name: string;
+  user_initials: string;
+  user_picture: string;
+}
+interface LoginResponse {
+  profile: Profile;
+  status: Boolean;
 }
 
 export default function FormLogin({ navigation }) {
@@ -42,10 +54,14 @@ export default function FormLogin({ navigation }) {
         password,
       });
       if (response.status === 200 && response.data.status === true) {
-        console.log(response.data);
-        // await AsyncStorage.setItem('email', data?.login);
-        // await AsyncStorage.setItem('password', data?.password);
-        // Redireact for Task Page
+        const data: LoginResponse = response.data
+        console.log(data);
+        await AsyncStorage.setItem('login', login);
+        await AsyncStorage.setItem('password', password);
+        await AsyncStorage.setItem('username', data.profile.name);
+        await AsyncStorage.setItem('user_initials', data.profile.user_initials);
+        await AsyncStorage.setItem('user_logon', "true");
+        await AsyncStorage.setItem('tasks', '');
         setShowError(false);
         navigation.navigate("Tasks");
       } else if (response.status === 500) {
@@ -67,6 +83,7 @@ export default function FormLogin({ navigation }) {
         colorText: Colors.text.primary,
       });
       setShowError(true);
+      console.log(error)
     }
   }
 
