@@ -4,7 +4,7 @@ interface pathProps {
 }
 
 export const apiUrl = ({ params }: pathProps) => {
-    const url = `https://ub-task-api.vercel.app/${params}`
+    const url = `https://ub-task-api.vercel.app${params}`
 
     return url
 }

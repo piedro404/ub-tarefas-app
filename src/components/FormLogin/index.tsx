@@ -5,8 +5,11 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  AsyncStorage,
+  Alert,
 } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
+import axios from "axios";
 
 import styles from "./styles";
 
@@ -32,17 +35,61 @@ export default function FormLogin() {
   const [password, setPassword] = useState("");
   const [data, setData] = useState<DataProps>();
   const [showError, setShowError] = useState(false);
-  const [ dialog, setDialog ] = useState<DialogProps>({ info: "", colorBox: Colors.alerts.error, colorText: Colors.text.primary})
+  const [dialog, setDialog] = useState<DialogProps>({
+    info: "",
+    colorBox: Colors.alerts.error,
+    colorText: Colors.text.primary,
+  });
 
-  function loginApp() {
+  const btnRef = useRef(null);
+
+  async function handleLogin() {
+    try {
+      const response = await axios.post(
+        apiUrl({ params: "/ub/profile" }),
+        data
+      );
+      if (response.status === 200 && response.data.status === true) {
+        console.log(response.data);
+        // await AsyncStorage.setItem('email', data?.login);
+        // await AsyncStorage.setItem('password', data?.password);
+        // Redireact for Task Page
+        setShowError(false);
+      } else if (response.status === 500) {
+        throw "Error Server";
+      } else {
+        setDialog({
+          info: "Nome de usuário ou senha errados.",
+          alert: "Por favor tente outra vez.",
+          colorBox: Colors.alerts.error,
+          colorText: Colors.text.primary,
+        });
+        setShowError(true);
+      }
+    } catch (error) {
+      setDialog({
+        info: "Algo deu Errado",
+        alert: "Tente novamente mais tarde",
+        colorBox: Colors.alerts.error,
+        colorText: Colors.text.primary,
+      });
+      setShowError(true);
+    }
+  }
+
+  async function loginApp() {
     if (login && password) {
       setData({ login, password });
+      await handleLogin();
+    } else {
+      setDialog({
+        info: "Insira seu cadastro da UB Virtual",
+        colorBox: Colors.alerts.error,
+        colorText: Colors.text.primary,
+      });
+      setShowError(true);
     }
-    else {
-      setDialog({ info: "Insira seu cadastro da UB Virtual", colorBox: Colors.alerts.error, colorText: Colors.text.primary})
-      setShowError(true)
-    }
-    setPassword("")
+    setPassword("");
     Keyboard.dismiss();
   }
 
@@ -55,10 +102,6 @@ export default function FormLogin() {
             alert={dialog?.alert}
             colorBox={dialog.colorBox}
             colorText={dialog.colorText}
-            // info="Nome de usuário ou senha errados."
-            // alert="Por favor tente outra vez."
-            // colorBox={Colors.alerts.error}
-            // colorText={Colors.text.primary}
           ></DialogBox>
         )}
       </View>
@@ -88,6 +131,7 @@ export default function FormLogin() {
         </View>
         <TouchableOpacity
           style={styles.btnLogin}
+          ref={btnRef}
           onPress={() => {
             loginApp();
           }}
