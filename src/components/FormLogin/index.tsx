@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Keyboard,
   AsyncStorage,
-  Alert,
 } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import axios from "axios";
@@ -18,11 +17,6 @@ import DialogBox from "@components/DialogBox";
 import { Colors } from "@constants/Colors";
 import { apiUrl } from "@scripts/apiUrl";
 
-interface DataProps {
-  login: string;
-  password: string;
-}
-
 interface DialogProps {
   info: string;
   colorBox: string;
@@ -30,31 +24,30 @@ interface DialogProps {
   alert?: string;
 }
 
-export default function FormLogin() {
+export default function FormLogin({ navigation }) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
-  const [data, setData] = useState<DataProps>();
   const [showError, setShowError] = useState(false);
   const [dialog, setDialog] = useState<DialogProps>({
     info: "",
     colorBox: Colors.alerts.error,
     colorText: Colors.text.primary,
   });
-
-  const btnRef = useRef(null);
+  const [btnDisable, setBtnDisable] = useState(false);
 
   async function handleLogin() {
     try {
-      const response = await axios.post(
-        apiUrl({ params: "/ub/profile" }),
-        data
-      );
+      const response = await axios.post(apiUrl({ params: "/ub/profile" }), {
+        login,
+        password,
+      });
       if (response.status === 200 && response.data.status === true) {
         console.log(response.data);
         // await AsyncStorage.setItem('email', data?.login);
         // await AsyncStorage.setItem('password', data?.password);
         // Redireact for Task Page
         setShowError(false);
+        navigation.navigate("Tasks");
       } else if (response.status === 500) {
         throw "Error Server";
       } else {
@@ -78,8 +71,9 @@ export default function FormLogin() {
   }
 
   async function loginApp() {
+    Keyboard.dismiss();
+    setBtnDisable(true);
     if (login && password) {
-      setData({ login, password });
       await handleLogin();
     } else {
       setDialog({
@@ -90,7 +84,7 @@ export default function FormLogin() {
       setShowError(true);
     }
     setPassword("");
-    Keyboard.dismiss();
+    setBtnDisable(false);
   }
 
   return (
@@ -130,8 +124,15 @@ export default function FormLogin() {
           ></TextInput>
         </View>
         <TouchableOpacity
-          style={styles.btnLogin}
-          ref={btnRef}
+          style={[
+            styles.btnLogin,
+            {
+              backgroundColor: btnDisable
+                ? Colors.theme.tertiary
+                : Colors.theme.primary,
+            },
+          ]}
+          disabled={btnDisable}
           onPress={() => {
             loginApp();
           }}
