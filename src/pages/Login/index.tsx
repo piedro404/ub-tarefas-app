@@ -5,7 +5,6 @@ import styles from "./styles";
 
 import Logo from "@components/Logo";
 import Underline from "@components/Underline";
-import DialogBox from "@components/DialogBox";
 import FormLogin from "@components/FormLogin";
 
 export default function Login({ navigation }: any) {
