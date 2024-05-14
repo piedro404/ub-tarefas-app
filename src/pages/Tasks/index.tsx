@@ -6,12 +6,12 @@ import axios from "axios";
 import styles from "./styles";
 
 interface Storage {
-    login?: string;
-    password?: string;
-    username?: string;
-    user_initials?: string;
-    user_logon?: string;
-    tasks?: string;
+    login?: string | null | undefined;
+    password?: string | null | undefined;
+    username?: string | null | undefined;
+    user_initials?: string | null | undefined;
+    user_logon?: string | null | undefined;
+    tasks?: string | null | undefined;
 }
 
 export default function Tasks() {
@@ -24,12 +24,12 @@ export default function Tasks() {
     async function getData() {
         try {
             setStorage({
-                login: AsyncStorage.getItem('login'),
-                password: AsyncStorage.getItem('password'),
-                username: AsyncStorage.getItem('username'),
-                user_initials: AsyncStorage.getItem('user_initials'),
-                user_logon: AsyncStorage.getItem('user_logon'),
-                tasks: AsyncStorage.getItem('tasks'),
+                login: await AsyncStorage.getItem('login'),
+                password: await AsyncStorage.getItem('password'),
+                username: await AsyncStorage.getItem('username'),
+                user_initials: await AsyncStorage.getItem('user_initials'),
+                user_logon: await AsyncStorage.getItem('user_logon'),
+                tasks: await AsyncStorage.getItem('tasks'),
             });
         } catch (error){
             console.log(error)

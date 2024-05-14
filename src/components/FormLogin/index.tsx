@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  Keyboard
+  Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -36,7 +36,7 @@ interface LoginResponse {
   status: Boolean;
 }
 
-export default function FormLogin({ navigation }) {
+export default function FormLogin({ navigation }: any) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
@@ -47,6 +47,18 @@ export default function FormLogin({ navigation }) {
   });
   const [btnDisable, setBtnDisable] = useState(false);
 
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  async function checkLoginStatus() {
+    const userLoggedIn = await AsyncStorage.getItem("user_logon");
+
+    if (userLoggedIn) {
+      navigation.navigate("Tasks");
+    }
+  };
+
   async function handleLogin() {
     try {
       const response = await axios.post(apiUrl({ params: "/ub/profile" }), {
@@ -54,14 +66,14 @@ export default function FormLogin({ navigation }) {
         password,
       });
       if (response.status === 200 && response.data.status === true) {
-        const data: LoginResponse = response.data
+        const data: LoginResponse = response.data;
         console.log(data);
-        await AsyncStorage.setItem('login', login);
-        await AsyncStorage.setItem('password', password);
-        await AsyncStorage.setItem('username', data.profile.name);
-        await AsyncStorage.setItem('user_initials', data.profile.user_initials);
-        await AsyncStorage.setItem('user_logon', "true");
-        await AsyncStorage.setItem('tasks', '');
+        await AsyncStorage.setItem("login", login);
+        await AsyncStorage.setItem("password", password);
+        await AsyncStorage.setItem("username", data.profile.name);
+        await AsyncStorage.setItem("user_initials", data.profile.user_initials);
+        await AsyncStorage.setItem("user_logon", "true");
+        await AsyncStorage.setItem("tasks", "");
         setShowError(false);
         navigation.navigate("Tasks");
       } else if (response.status === 500) {
@@ -83,7 +95,7 @@ export default function FormLogin({ navigation }) {
         colorText: Colors.text.primary,
       });
       setShowError(true);
-      console.log(error)
+      console.log(error);
     }
   }
 

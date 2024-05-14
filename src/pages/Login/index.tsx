@@ -8,14 +8,14 @@ import Underline from "@components/Underline";
 import DialogBox from "@components/DialogBox";
 import FormLogin from "@components/FormLogin";
 
-export default function Login({ navigation }) {
+export default function Login({ navigation }: any) {
   return (
     <Pressable onPress={Keyboard.dismiss} style={styles.container}>
       <Logo></Logo>
       <View style={styles.underlineContainer}>
-        <Underline/>
+        <Underline />
       </View>
-      <FormLogin navigation={ navigation }></FormLogin>
+      <FormLogin navigation={navigation}></FormLogin>
     </Pressable>
   );
 }
