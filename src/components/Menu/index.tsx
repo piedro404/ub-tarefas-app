@@ -5,7 +5,6 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import {
-  Avatar,
   Title,
   Caption,
   Paragraph,
@@ -15,10 +14,20 @@ import {
   Switch,
 } from "react-native-paper";
 
-export default function Menu({...props}) {
-    return(
-        <View>
-            
+import styles from "./styles";
+
+import Avatar from "@components/Avatar";
+
+export default function Menu({...props} : any) {
+  return (
+    <View style={styles.container}>
+      <DrawerContentScrollView {...props}>
+        <View style={styles.userInfoSection}>
+            <View style={styles.avatarUser}>
+                <Avatar initial="PH"></Avatar>
+            </View>
         </View>
-    )
+      </DrawerContentScrollView>
+    </View>
+  );
 }
