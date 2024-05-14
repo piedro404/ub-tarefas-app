@@ -6,17 +6,18 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import "react-native-gesture-handler";
 
 import Login from "@pages/Login";
+import Tasks from "@pages/Tasks";
+import Menu from "@components/Menu";
 
 import { Colors } from "@constants/Colors";
-import Tasks from "@pages/Tasks";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function MyDrawer() {
   return (
-    <Drawer.Navigator>
-      
+    <Drawer.Navigator drawerContent={(props) => <Menu {...props} />}>
+      <Drawer.Screen name="Atividades" component={Tasks}/>
     </Drawer.Navigator>
   );
 }

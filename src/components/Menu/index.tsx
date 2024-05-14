@@ -15,8 +15,10 @@ import {
   Switch,
 } from "react-native-paper";
 
-export default function Menu() {
+export default function Menu({...props}) {
     return(
-        <Text>Oi</Text>
+        <View>
+            
+        </View>
     )
 }
