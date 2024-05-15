@@ -5,10 +5,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     infos: {
-        paddingHorizontal: 15,
+        paddingHorizontal: 5,
         paddingVertical: 15,
         borderBottomWidth: 1,
         marginBottom: 10,
+        flexDirection: "row",
+        justifyContent: "space-between",
     }
 });
 

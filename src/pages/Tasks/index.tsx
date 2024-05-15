@@ -8,7 +8,7 @@ import styles from "./styles";
 
 import { apiUrl } from "@scripts/apiUrl";
 
-import InfoTasks from "@components/InfoTasks";
+import TaskField from "@components/TaskField";
 
 interface Task {
   date: string;
@@ -88,13 +88,16 @@ export default function Tasks() {
       {storage.tasksDetails && (
         <>
           <View style={styles.infos}>
-            <Text variant="titleMedium">{storage.tasksDetails.description}</Text>
+            <Text variant="titleMedium">Linha do Tempo</Text>
+            <Text variant="titleMedium">
+              {storage.tasksDetails.description}
+            </Text>
           </View>
           <View style={styles.tasks}>
-            {/* {storage.tasksDetails.find_task &&
+            {storage.tasksDetails.find_task &&
               storage.tasksDetails.list_tasks.map((task, index) => {
-                return <Text key={index}>{task.task_name}</Text>;
-              })} */}
+                return <TaskField {...task}></TaskField>;
+              })}
           </View>
         </>
       )}
