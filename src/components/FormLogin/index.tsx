@@ -73,7 +73,7 @@ export default function FormLogin({ navigation }: any) {
   async function checkLoginStatus() {
     const userLoggedIn = await AsyncStorage.getItem("user_logon");
 
-    if (userLoggedIn) {
+    if (userLoggedIn === "true") {
       navigation.navigate("Tasks");
     }
   };

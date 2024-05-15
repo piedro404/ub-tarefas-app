@@ -31,10 +31,17 @@ interface Storage {
 
 export default function Tasks() {
   const [storage, setStorage] = useState<Storage>({});
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    if (isReady) {
+      getSearchTasks();
+    }
+  }, [isReady]);
 
   async function getData() {
     try {
@@ -44,7 +51,7 @@ export default function Tasks() {
         password: await AsyncStorage.getItem("password"),
         tasksDetails: tasks ? JSON.parse(tasks) : {},
       });
-      await getSearchTasks();
+      setIsReady(true);
     } catch (error) {
       console.log(error);
     }
@@ -57,7 +64,12 @@ export default function Tasks() {
         login: login,
         password: password,
       });
+      // console.log(response.data);
       if (response.status === 200 && response.data.status === true) {
+        await AsyncStorage.setItem(
+          "tasks",
+          JSON.stringify(response.data.tasks)
+        );
         setStorage((prevState) => ({
           ...prevState,
           tasksDetails: response.data.tasks,
