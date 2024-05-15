@@ -5,6 +5,8 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  BackHandler,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -48,6 +50,23 @@ export default function FormLogin({ navigation }: any) {
   const [btnDisable, setBtnDisable] = useState(false);
 
   useEffect(() => {
+    const onBackPress = () => {
+      Alert.alert(
+        "Sair da UBTarefas",
+        "Você deseja sair do APP?",
+        [
+          {
+            text: "Cancelar",
+            onPress: () => {},
+          },
+          { text: "Sim", onPress: () => BackHandler.exitApp() },
+        ],
+        { cancelable: false }
+      );
+
+      return true;
+    };
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
     checkLoginStatus();
   }, []);
 
@@ -67,10 +86,11 @@ export default function FormLogin({ navigation }: any) {
       });
       if (response.status === 200 && response.data.status === true) {
         const data: LoginResponse = response.data;
-        console.log(data);
+        // console.log(data);
         await AsyncStorage.setItem("login", login);
         await AsyncStorage.setItem("password", password);
         await AsyncStorage.setItem("username", data.profile.name);
+        await AsyncStorage.setItem("email", data.profile.email);
         await AsyncStorage.setItem("user_initials", data.profile.user_initials);
         await AsyncStorage.setItem("user_logon", "true");
         await AsyncStorage.setItem("tasks", "");

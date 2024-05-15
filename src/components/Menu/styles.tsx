@@ -5,13 +5,21 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     userInfoSection: {
+        width: "100%",
         flexDirection: "row",
+        paddingHorizontal: 5,
+        paddingTop: 25,
+        marginBottom: 5,
+        gap: 10,
+        alignItems: "center"
     },
-    avatarUser: {
-        width: 75,
-        height: 75,
-        marginTop: 15,
-    }
+    userDetails: {
+        width: "70%",
+        overflow: "hidden",
+    },
+    drawerPages: {
+        flex: 1,
+    },
 });
 
 export default styles
