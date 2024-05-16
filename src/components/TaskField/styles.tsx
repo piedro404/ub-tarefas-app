@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     timeLimit: {
-        width: 55,
+        width: "16%",
         textAlign: "center",
         paddingHorizontal: 5,
     },
