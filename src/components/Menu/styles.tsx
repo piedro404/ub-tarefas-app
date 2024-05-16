@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
     userDetails: {
         width: "70%",
         overflow: "hidden",
+        paddingRight: 10,
     },
     drawerPages: {
         flex: 1,

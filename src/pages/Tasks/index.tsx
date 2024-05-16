@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, ScrollView, RefreshControl } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -84,12 +84,16 @@ export default function Tasks() {
     }
   }
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    getSearchTasks();
+    await getSearchTasks();
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
+  };
+
+  const handleRefresh = useCallback(() => {
+    onRefresh();
   }, []);
 
   return (
@@ -107,7 +111,7 @@ export default function Tasks() {
               scrollEnabled
               contentContainerStyle={styles.tasks}
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
               }
             >
               {storage.tasksDetails.list_tasks.map((task, index) => {
