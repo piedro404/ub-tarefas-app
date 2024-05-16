@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, ScrollView, RefreshControl } from "react-native";
+import { View, ScrollView, RefreshControl, BackHandler, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { Text } from "react-native-paper";
@@ -27,9 +27,9 @@ interface TaskDetails {
 }
 
 interface Storage {
-  login?: string | null | undefined;
-  password?: string | null | undefined;
-  tasksDetails?: TaskDetails | null | undefined;
+  login?: string;
+  password?: string;
+  tasksDetails?: TaskDetails;
 }
 
 export default function Tasks() {
@@ -38,6 +38,23 @@ export default function Tasks() {
   const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
+    const onBackPress = () => {
+      Alert.alert(
+        "Sair da UBTarefas",
+        "Você deseja sair do APP?",
+        [
+          {
+            text: "Cancelar",
+            onPress: () => {},
+          },
+          { text: "Sim", onPress: () => BackHandler.exitApp() },
+        ],
+        { cancelable: false }
+      );
+
+      return true;
+    };
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
     getData();
   }, []);
 
@@ -50,12 +67,16 @@ export default function Tasks() {
   async function getData() {
     try {
       const tasks = await AsyncStorage.getItem("tasks");
+      const login = await AsyncStorage.getItem("login");
+      const password = await AsyncStorage.getItem("password");
       setStorage({
-        login: await AsyncStorage.getItem("login"),
-        password: await AsyncStorage.getItem("password"),
+        login: login ? login : "",
+        password: password ? password : "",
         tasksDetails: tasks ? JSON.parse(tasks) : {},
       });
-      setIsReady(true);
+      if(isReady === false) {
+        setIsReady(true);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -63,7 +84,9 @@ export default function Tasks() {
 
   async function getSearchTasks() {
     try {
+      // console.log(storage);
       const { login, password } = storage;
+      // console.log(login, password);
       const response = await axios.post(apiUrl({ params: "/ub/task" }), {
         login: login,
         password: password,
@@ -74,10 +97,7 @@ export default function Tasks() {
           "tasks",
           JSON.stringify(response.data.tasks)
         );
-        setStorage((prevState) => ({
-          ...prevState,
-          tasksDetails: response.data.tasks,
-        }));
+        getData();
       }
     } catch (error) {
       console.log(error);
@@ -89,7 +109,7 @@ export default function Tasks() {
     await getSearchTasks();
     setTimeout(() => {
       setRefreshing(false);
-    }, 2000);
+    }, 1000);
   };
 
   const handleRefresh = useCallback(() => {
@@ -111,7 +131,10 @@ export default function Tasks() {
               scrollEnabled
               contentContainerStyle={styles.tasks}
               refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={handleRefresh}
+                />
               }
             >
               {storage.tasksDetails.list_tasks.map((task, index) => {
