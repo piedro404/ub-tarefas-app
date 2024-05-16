@@ -76,38 +76,26 @@ export default function FormLogin({ navigation }: any) {
     if (userLoggedIn === "true") {
       navigation.navigate("Tasks");
     }
-  };
+  }
 
   async function handleLogin() {
-    try {
-      const response = await axios.post(apiUrl({ params: "/ub/profile" }), {
-        login,
-        password,
-      });
-      if (response.status === 200 && response.data.status === true) {
-        const data: LoginResponse = response.data;
-        // console.log(data);
-        await AsyncStorage.setItem("login", login);
-        await AsyncStorage.setItem("password", password);
-        await AsyncStorage.setItem("username", data.profile.name);
-        await AsyncStorage.setItem("email", data.profile.email);
-        await AsyncStorage.setItem("user_initials", data.profile.user_initials);
-        await AsyncStorage.setItem("user_logon", "true");
-        await AsyncStorage.setItem("tasks", "");
-        setShowError(false);
-        navigation.navigate("Tasks");
-      } else if (response.status === 500) {
-        throw "Error Server";
-      } else {
-        setDialog({
-          info: "Nome de usuário ou senha errados.",
-          alert: "Por favor tente outra vez.",
-          colorBox: Colors.alerts.error,
-          colorText: Colors.text.primary,
-        });
-        setShowError(true);
-      }
-    } catch (error) {
+    const response = await axios.post(apiUrl({ params: "/ub/profile" }), {
+      login,
+      password,
+    });
+    if (response.status === 200 && response.data.status === true) {
+      const data: LoginResponse = response.data;
+      // console.log(data);
+      await AsyncStorage.setItem("login", login);
+      await AsyncStorage.setItem("password", password);
+      await AsyncStorage.setItem("username", data.profile.name);
+      await AsyncStorage.setItem("email", data.profile.email);
+      await AsyncStorage.setItem("user_initials", data.profile.user_initials);
+      await AsyncStorage.setItem("user_logon", "true");
+      await AsyncStorage.setItem("tasks", "");
+      setShowError(false);
+      navigation.navigate("Tasks");
+    } else if (response.status === 500) {
       setDialog({
         info: "Algo deu Errado",
         alert: "Tente novamente mais tarde",
@@ -115,7 +103,14 @@ export default function FormLogin({ navigation }: any) {
         colorText: Colors.text.primary,
       });
       setShowError(true);
-      console.log(error);
+    } else {
+      setDialog({
+        info: "Nome de usuário ou senha errados.",
+        alert: "Por favor tente outra vez.",
+        colorBox: Colors.alerts.error,
+        colorText: Colors.text.primary,
+      });
+      setShowError(true);
     }
   }
 

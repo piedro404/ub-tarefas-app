@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     userInfoSection: {
         width: "100%",
         flexDirection: "row",
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         paddingTop: 25,
         marginBottom: 5,
         gap: 10,
@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     userDetails: {
         width: "70%",
         overflow: "hidden",
-        paddingRight: 10,
     },
     drawerPages: {
         flex: 1,
