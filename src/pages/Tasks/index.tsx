@@ -35,6 +35,7 @@ interface Storage {
 export default function Tasks() {
   const [storage, setStorage] = useState<Storage>({});
   const [isReady, setIsReady] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(() => {
     getData();
@@ -83,6 +84,14 @@ export default function Tasks() {
     }
   }
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getSearchTasks();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   return (
     <View style={styles.container}>
       {storage.tasksDetails && (
@@ -93,12 +102,23 @@ export default function Tasks() {
               {storage.tasksDetails.description}
             </Text>
           </View>
-          <View style={styles.tasks}>
-            {storage.tasksDetails.find_task &&
-              storage.tasksDetails.list_tasks.map((task, index) => {
-                return <TaskField {...task}></TaskField>;
+          {storage.tasksDetails.find_task ? (
+            <ScrollView
+              scrollEnabled
+              contentContainerStyle={styles.tasks}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+            >
+              {storage.tasksDetails.list_tasks.map((task, index) => {
+                return <TaskField key={index} {...task}></TaskField>;
               })}
-          </View>
+            </ScrollView>
+          ) : (
+            <View style={styles.notFound}>
+              <Text variant="headlineSmall">Nenhuma Tarefa Encontrada!</Text>
+            </View>
+          )}
         </>
       )}
     </View>
