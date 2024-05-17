@@ -2,9 +2,8 @@
   "expo": {
     "name": "UBTarefas",
     "slug": "UBTarefas",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "platforms": [
-      "ios",
       "android"
     ],
     "orientation": "portrait",
@@ -15,17 +14,20 @@
       "resizeMode": "contain",
       "backgroundColor": "#ca1d23"
     },
-    "ios": {
-      "supportsTablet": false
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ca1d23"
-      }
+      },
+      "package": "com.piedro404.UBTarefas"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4e1bf116-8581-4d6d-8d7e-a935fc1f58c9"
+      }
+    }
   }
 }
